@@ -7,7 +7,7 @@ import psycopg2
 from psycopg2.extras import RealDictCursor
 import time
 from . import models
-from .database import engine, SessionLocal
+from .database import engine, get_db
 from sqlalchemy.orm import Session
 models.Base.metadata.create_all(bind=engine)
 
@@ -18,14 +18,6 @@ class Posts(BaseModel):
     title: Optional[str] = None
     content: str
     published: bool = True
-
-
-def get_db():
-    db = SessionLocal()
-    try:
-        yield db
-    finally:
-        db.close()
 
 
 class UpdatePost(BaseModel):
@@ -130,4 +122,5 @@ def update_post(id: int, post: UpdatePost):
 
 @app.get("/sqlalchemy")
 def test_posts(db: Session = Depends(get_db)):
-    return {"succes"}
+    posts =  db.query(models.Post).all()
+    return { "data " : posts}
