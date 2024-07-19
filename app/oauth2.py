@@ -1,5 +1,4 @@
 from datetime import datetime, timedelta
-
 import jwt
 from fastapi.security import OAuth2PasswordBearer, OAuth2PasswordRequestForm
 from jwt.exceptions import InvalidTokenError
@@ -13,8 +12,10 @@ def create_access_token(data: dict):
     encoded_data = data.copy()
 
     expire = datetime.now() + timedelta(minutes=ACCESS_TOKEN_EXPIRE_MINUTES)
-    encoded_data.update({"expr": expire})
+    encoded_data.update({"exp": expire})
 
     jwt_token = jwt.encode(encoded_data, SECRET_KEY, algorithm=ALGORITHM)
 
     return jwt_token
+
+# def verify_
